@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+<!--  注解配置  -->
+    <mvc:annotation-driven/>
+    <!-- 扫描加载Bean-->
+    <context:component-scan base-package="Controller"/>
+
+<!--  DispatchServlet  控制器-->
+    <bean id="Simple" class="Controller.SimpleController"/>
+    <!--  拦截器  -->
+    <bean id="interceptor" class="Controller.SimpleHandlerInterceptor"/>
+<!--  HandlerMapping  映射配置-->
+    <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="urlMap">
+            <props>
+                <prop key="/user.do">Simple</prop>
+            </props>
+        </property>
+        <!--  设置拦截器  -->
+        <property name="interceptors" ref="interceptor"/>
+    </bean>
+
+    <bean class="Controller.SimpleExceptionResolver" />
+
+<!--  HandlerAdapter  调用适配器-->
+    <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/><!--  SimpleControllerHandlerAdapter  supports()方法可以看出  调用的类必须继承Controller类-->
+
+<!--  ViewResolver  视图仓库  # 不配置也行，业务方法里写全路径呗-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!--  views路径  view的前缀  -->
+        <property name="prefix" value="/WEB-INF/pages/" />
+        <!--  view的后缀  类型  -->
+        <property name="suffix" value=".jsp"/>
+        <!--  指定返回一个什么样view 解析处理视图-->
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+    </bean>
+</beans>
