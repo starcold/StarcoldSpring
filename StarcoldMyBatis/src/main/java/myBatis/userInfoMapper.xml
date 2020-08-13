@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="myBatis.UserInfoMapper">
+    <resultMap id="UserInfoMapper" type="UserInfo">
+        <id property="id" jdbcType="INTEGER" javaType="int" column="id"/>
+        <result property="userName" column="username"></result>
+    </resultMap>
+<!--    flushCache刷新缓存  useCache使用缓存默认false-->
+    <sql id="normal_colume">
+        id,username,nickname,password
+    </sql>
+<!--    <select id="getUser" parameterType="int" resultType="UserInfo">-->
+<!--    采用resultMap的方式，UserInfo中的除了username之外的其他字段也会被自动填充 可以通过AutoMappingBehavior来开关 -->
+    <select id="getUser" parameterType="int" resultMap="UserInfoMapper">
+        select * from user_info where id=#{id}
+    </select>
+
+<!--    parameterType可以是hashmap -->
+    <select id="selectUser" parameterType="UserInfo" resultType="UserInfo">
+        select <include refid="normal_colume"></include>
+    <!--       from user_info where id=#{id} -->
+    <!--   动态语句  -->
+            from user_info
+            <where>
+                <if test="info.userName != null"> and username=#{info.userName} </if>
+                <if test="password != null"> and password=#{password} </if>
+            </where>
+        </select>
+
+        <select id="getUserByIds" parameterType="ArrayList" resultType="UserInfo">
+            select * from user_info where id in
+            <foreach collection="array" open="(" close=")" index="i" item="id" separator=",">
+                #{id}
+            </foreach>
+        </select>
+
+        <update id="updateUser" parameterType="UserInfo">
+            update user_info set
+            <set>
+                <if test="password != null">
+                    ,password=#{password}
+                </if>
+                <if test="nickname != null">
+                    ,nickname=#{nickname}
+                </if>
+            </set>
+        </update>
+    <!--    <delete id=""></delete>-->
+<!--    <insert id=""></insert>-->
+
+</mapper>

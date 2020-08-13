@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+<!--    这个必须写在settings前面 -->
+    <properties resource="app.properties">
+        <property name="jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="jdbc.username" value="root"/>
+    </properties>
+
+<!--&lt;!&ndash;    全局参数配置 &ndash;&gt;-->
+    <settings>
+        <!--        mapUnderscoreToCamelCase	是否开启驼峰命名自动映射，即从经典数据库列名 A_COLUMN 映射到经典 Java 属性名 aColumn。	true | false-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <typeAliases>
+        <!--     这一行这里配不配没有作用  -->
+<!--        <typeAlias type="myBatis.UserInfo" alias="UserInfo"/>-->
+<!--    把myBatis下的类都加进来，默认使用短类名作为配置    -->
+        <package name="myBatis"/>
+    </typeAliases>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+<!--            数据库配置-->
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+<!--            问号后面的部分 新版的mysql会询问是否SSL连接，返回一个Boolean值-->
+                <property name="url" value="jdbc:mysql://localhost:3306/starcold?characterEncoding=utf-8&amp;serverTimezone=UTC&amp;useSSL=false"/>
+                <property name="username" value="root"/>
+                <property name="password" value="Myx411522/*-+"/>
+            </dataSource>
+        </environment>
+
+        <environment id="test">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <!--            数据库配置-->
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <!--            问号后面的部分 新版的mysql会询问是否SSL连接，返回一个Boolean值-->
+                <property name="url" value="jdbc:mysql://localhost:3306/starcold?characterEncoding=utf-8&amp;serverTimezone=UTC&amp;useSSL=false"/>
+                <property name="username" value="root"/>
+                <property name="password" value="Myx411522/*-+"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <mapper resource="userInfo.xml"/>
+        <!--     通过扫包的方式添加  -->
+        <package name="myBatis"/>
+    </mappers>
+</configuration>
